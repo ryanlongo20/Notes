@@ -44,6 +44,26 @@
     - [Overflow](#overflow)
   - [Advanced Selectors](#advanced-selectors)
     - [Parent and Sibling Combinators](#parent-and-sibling-combinators)
+  - [Pseudo-selectors](#pseudo-selectors)
+    - [Pseudo-classes](#pseudo-classes)
+    - [Dynamic and User Action Pseudo-classes](#dynamic-and-user-action-pseudo-classes)
+    - [Structural Pseudo-classes](#structural-pseudo-classes)
+    - [Pseudo-Elements](#pseudo-elements)
+    - [Attribute Selectors](#attribute-selectors)
+  - [Positioning](#positioning)
+    - [Static and Relative Positioning](#static-and-relative-positioning)
+    - [Absolute Positioning](#absolute-positioning)
+    - [Fixed Positioning](#fixed-positioning)
+    - [Sticky Positioning](#sticky-positioning)
+  - [CSS Functions](#css-functions)
+    - [calc()](#calc)
+    - [min()](#min)
+    - [max ()](#max-)
+    - [clamp()](#clamp)
+  - [Custom Properties](#custom-properties)
+    - [Using Customer Properties](#using-customer-properties)
+    - [Fallback Values](#fallback-values)
+    - [Scope](#scope)
 
 # JS
 
@@ -301,7 +321,7 @@ Usually they are downloaded from an image editor that can create them (such as F
 1. xmlns - "XNL namespace". Specifies dialect of XML.
 2. viewBox - defines bounds of SVG
 3. class, id - same as HTML
-4. elements such as <circle> <rect> <path> <text> are defined by SVG namespace.
+4. elements such as circle rect path text are defined by SVG namespace.
 5. Many SVG attributes like fill and stroke can be changed in CSS
 
 ### Embedding SVGs
@@ -393,7 +413,156 @@ Can define what happens to an element when its content is too big to fit. Can ad
 ### Parent and Sibling Combinators 
 
 1. (>) child combinator
-2. (+) adjacent sibling combinator
-3. (~) general sibling combinator
+2. (+) adjacent sibling combinator (selects sbiblings only next to our element)
+3. (~) general sibling combinator (selects all siblings)
 
-hsdkjfhsdkfhsk
+If we wanted to select child and grand-child divs inside of main, we write:
+
+main div {
+
+}
+
+If we want to select only the child or grand-child divs inside of main, we write:
+
+main > div {   <-- selects child element one indentation down
+
+}
+
+main > div > div {   <-- selects grand-child two indentations down
+
+}
+
+## Pseudo-selectors
+
+### Pseudo-classes
+
+Some pseudo-classes are based on their position or structure within the HTML, some are based on the state of a particular element, or how the element is being interacted with
+
+They share the same specificity as regular classes 
+
+### Dynamic and User Action Pseudo-classes
+
+:focus applies to an element that is currently selected either with cursor or keyboard
+
+:hover affects anything under the mous pointer
+
+:active applies to elements that are currently being clicked
+
+### Structural Pseudo-classes
+
+Structural Pseudo-classes are a powerful way to select elements based on their position within the DOM
+
+:root is a special class that represents the very top level of your document, usually the place where you place your global CSS rules, such as custom properties and CSS variables
+
+:first-child and :last-child will match elements that are the first or last sibling 
+
+:empty matches elements that have no children at all
+
+:only-child matches elements that have no siblings
+
+:nth-child has many use cases: can select even (:nth-child(even)), 5th el (:nth-child(5)), every third el (:nth-child(3n))
+
+
+### Pseudo-Elements
+
+::marker allows you to customize styling of li elements bullets or numbers
+
+::selection allows you to change highlighting when a user selects text on the page
+
+::before and ::after allow us to add extra elements onto the page with CSS, instead of HTML. Using it to decorate text in various ways is one common use case.
+
+### Attribute Selectors
+
+
+## Positioning
+
+### Static and Relative Positioning
+
+Default positioning mode is position: static. Relative is the same as static, but properties top, right, bottom, and left displace the element relative to its normal position in the normal flow of the document
+
+The element is positioned according to the normal flow of the document in static.
+
+### Absolute Positioning
+
+position:: absolute allows you to position something at an exact point on the screen without disturbing the other elements around it
+
+It removes that element from the normal document flow while being positioned relative to an ancestor element.
+
+In simpler terms: elements that are removed from the normal flow of the document don't affect other elements and are also not affected by other elements
+
+### Fixed Positioning
+
+Fixed elements are removed from the normal flow of the document and are positioned relative to the viewport. You use top, right, bottom, and left properties to position it, and it will stay there as the user scrolls. Useful for floating chat buttons.
+
+### Sticky Positioning
+
+Sticky Elements will act like normal elements until you scroll past them, then they start behaving like fixed elements.
+
+Useful for section headings. 
+
+## CSS Functions
+
+### calc()
+
+Used for mixing units
+
+ex:
+
+--header: 3rem;
+--footer: 40px;
+--main: calc(100vh - calc(var(--header) + var(--footer)));
+
+To put it another way: main = 100vh - (header + footer). calc() handles the math for us
+
+### min()
+
+Ex: width: min(150px, 100%);
+-If there are 150px available to the image, it will take up all 150px. If there are not 150px available, the image will switch to 100% of the parent's width
+
+### max ()
+
+Works the same way as min, only in reverse. It will select the largest possible value from within the paranthesis. max() ensures a minimum allowed value for a property
+
+### clamp()
+
+Takes 3 values: smallest value, ideal value, largest value
+
+## Custom Properties
+
+CSS variables allow us to reference a css value however many times we want throughout a file
+
+### Using Customer Properties 
+
+.error-modal {
+  --color-error-text: red;
+  --modal-border: 1px solid black;
+  --modal-font-size: calc(2rem + 5vw);
+
+  color: var(--color-error-text);
+  border: var(--modal-border);
+  font-size: var(--modal-font-size);
+}
+
+We first declare out custom property with a double hyphen followed by a case sensitive property name (color-error-text. Then we store any valid CSSS value in our newly declared custom property. When we want to access our property, we use the var() function 
+
+### Fallback Values
+
+var() function accepts two parameters: a custom property we want to assign and a fallback
+
+### Scope 
+
+The scope of a custom property is determined by the selector. 
+
+.cool-div {
+  --main-bg: red;
+}
+
+.cool-paragraph {
+  background-color: var(--main-bg);
+}
+
+.boring-paragraph {
+  background-color: var(--main-bg);
+}
+
+Background color of red only applies to the .cool-paragraph class as it is the only element in the scope of the div that contains the variable 
