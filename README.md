@@ -396,14 +396,4 @@ Can define what happens to an element when its content is too big to fit. Can ad
 2. (+) adjacent sibling combinator
 3. (~) general sibling combinator
 
-<main class="parent">
-  <div class="child group1">
-    <div class="grand-child group1"></div>
-  </div>
-  <div class="child group2">
-    <div class="grand-child group2"></div>
-  </div>
-  <div class="child group3">
-    <div class="grand-child group3"></div>
-  </div>
-</main>
+hsdkjfhsdkfhsk
