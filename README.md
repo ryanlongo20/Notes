@@ -18,7 +18,15 @@
 - [HTML](#html)
   - [SVG](#svg)
     - [Introduction](#introduction)
+    - [What are they?](#what-are-they)
+    - [Drawbacks](#drawbacks)
+    - [Anatomy](#anatomy)
+    - [Embedding SVGs](#embedding-svgs)
+  - [Tables](#tables)
+    - [Captions](#captions)
+    - [<tfoot>, <tbody>, <thead>](#tfoot-tbody-thead)
 - [CSS](#css)
+  - [CSS Units](#css-units)
 
 # JS
 
@@ -251,5 +259,52 @@ delete user.name;
 SVGs are a common image format of the web, and they scale to any size and retain their quality without an increased file size.
 
 Often used for: 
+1. Icons
+2. Graphs/Charts
+3. Large, simple images
+4. Patterned backgrounds
+5. Applying effects to other elements
+
+### What are they?
+
+"SVG" is "Scalable Vector Graphic". These are images designed by math rather than a grid of pixels. You have formulas for different shapes and lines that can scale to any size.
+
+SVGs are defined using XML (Extensive markup language), an HTML-like syntax which is used for APIs, RSS, etc
+
+SVGs being defined by XML makes it so the source-code is human readable, unlike a JPEG
+
+### Drawbacks
+
+-Inefficient at storing complex images
+
+### Anatomy
+
+Usually they are downloaded from an image editor that can create them (such as Figma)
+
+1. xmlns - "XNL namespace". Specifies dialect of XML.
+2. viewBox - defines bounds of SVG
+3. class, id - same as HTML
+4. elements such as <circle> <rect> <path> <text> are defined by SVG namespace.
+5. Many SVG attributes like fill and stroke can be changed in CSS
+
+### Embedding SVGs
+
+You can place an SVG by either linking them or using them inline. Linking works the same as in HTML & CSS, but the contents of the SVG is not accessible from the webpage
+
+Inlining helps you unlock all of SVGs potential, but adds some readability challenges.
+
+## Tables
+
+You can create a table with **<table></table>** tag. A **<th></th>**  tag is for the table headers, and **<tr>** is for table row, **<td>** is for table data cell
+
+### Captions
+
+Useful for blind users, implemented using **<caption>** tag
+
+### <tfoot>, <tbody>, <thead>
+
+These tags give the table more structural definition.
 # CSS 
+
+## CSS Units
 
