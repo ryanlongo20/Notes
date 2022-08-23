@@ -27,6 +27,23 @@
     - [<tfoot>, <tbody>, <thead>](#tfoot-tbody-thead)
 - [CSS](#css)
   - [CSS Units](#css-units)
+    - [Absolute units](#absolute-units)
+    - [Relative Units](#relative-units)
+      - [em and rem](#em-and-rem)
+      - [Viewport Units](#viewport-units)
+      - [Suggestions](#suggestions)
+  - [More Text Styles](#more-text-styles)
+    - [letter-spacing](#letter-spacing)
+    - [line-height](#line-height)
+    - [text-transform](#text-transform)
+    - [text-shadow](#text-shadow)
+  - [More CSS Properties](#more-css-properties)
+    - [Background](#background)
+    - [Border](#border)
+    - [Box-shadow](#box-shadow)
+    - [Overflow](#overflow)
+  - [Advanced Selectors](#advanced-selectors)
+    - [Parent and Sibling Combinators](#parent-and-sibling-combinators)
 
 # JS
 
@@ -299,7 +316,7 @@ You can create a table with **<table></table>** tag. A **<th></th>**  tag is for
 
 ### Captions
 
-Useful for blind users, implemented using **<caption>** tag
+Useful for blind users, implemented using **caption** tag
 
 ### <tfoot>, <tbody>, <thead>
 
@@ -308,3 +325,85 @@ These tags give the table more structural definition.
 
 ## CSS Units
 
+### Absolute units
+**px, in, cm**
+
+### Relative Units
+
+#### em and rem
+**1em** is the font-size of an element (or the element's parent if you're using it to set font-size). So if an element's width is **4em**, the width is **64px**.
+
+**1rem** is the **font-size** of the root element (either **:root** or **html**). rem is recommended over em to increase readability.
+
+#### Viewport Units
+
+**1vh** is equal to 1% of the viewport height and **1vw** is equal to 1% of the viewport width
+
+#### Suggestions
+
+Use rem for font-size and px for everything else.
+
+## More Text Styles
+
+### letter-spacing
+
+Changes space between letters in a word.
+
+### line-height
+
+Line height adjusts the space between lines in wrapped text, can increase readability.
+
+### text-transform 
+
+
+Changes the case of the given text. Can use this to force your heading tags to be all uppercase, or to capitalize every word.
+
+### text-shadow 
+
+Adds a shadow around the text in the selected element.
+
+## More CSS Properties
+
+### Background
+
+Background is a shorthand for 8 different background-related properties.
+background-attachment
+background-clip
+background-color
+background-image
+background-origin
+background-position
+background-repeat
+background-size
+
+### Border 
+
+Bordrer is a shorthand for color, style, and width. Border-radius allows you to set the radius for an element (useful for making rounded edges)
+
+### Box-shadow
+
+Adds shadow effect around element, creates a sense of depth on your page
+
+### Overflow 
+
+Can define what happens to an element when its content is too big to fit. Can add scrollbars to an element in a webpage
+
+## Advanced Selectors
+
+### Parent and Sibling Combinators 
+
+1. (>) child combinator
+2. (+) adjacent sibling combinator
+3. (~) general sibling combinator
+
+<main class="parent">
+  <div class="child group1">
+    <div class="grand-child group1"></div>
+  </div>
+  <div class="child group2">
+    <div class="grand-child group2"></div>
+  </div>
+  <div class="child group3">
+    <div class="grand-child group3"></div>
+  </div>
+</main>
