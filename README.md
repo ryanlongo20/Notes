@@ -16,6 +16,8 @@
         - [Hello, object](#hello-object)
     - [Arrays](#arrays)
 - [HTML](#html)
+  - [SVG](#svg)
+    - [Introduction](#introduction)
 - [CSS](#css)
 
 # JS
@@ -103,7 +105,7 @@ let user = {
 };
 
 let key = prompt("What do you want to know about the user?", "name");
-
+t
 //access by variable
 alert ( user[key] ); // John if entered "name", would be 30 if enter "age"
 ```
@@ -242,4 +244,12 @@ delete user.name;
 ### Arrays
 # HTML
 
+## SVG
+
+### Introduction
+
+SVGs are a common image format of the web, and they scale to any size and retain their quality without an increased file size.
+
+Often used for: 
 # CSS 
+
