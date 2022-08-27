@@ -15,6 +15,17 @@
       - [Some problems](#some-problems)
         - [Hello, object](#hello-object)
     - [Arrays](#arrays)
+  - [this or that?](#this-or-that)
+    - [Misconceptions](#misconceptions)
+  - [this in more detail](#this-in-more-detail)
+    - [Default Binding](#default-binding)
+    - [Implicit Binding](#implicit-binding)
+  - [Objects and Object Constructors](#objects-and-object-constructors)
+    - [Object as a Design Pattern](#object-as-a-design-pattern)
+    - [Object Constructors](#object-constructors)
+    - [The Prototype](#the-prototype)
+    - [Constructor](#constructor)
+    - [Recommended Method for Prototypal Inheritance](#recommended-method-for-prototypal-inheritance)
 - [HTML](#html)
   - [SVG](#svg)
     - [Introduction](#introduction)
@@ -24,7 +35,22 @@
     - [Embedding SVGs](#embedding-svgs)
   - [Tables](#tables)
     - [Captions](#captions)
-    - [<tfoot>, <tbody>, <thead>](#tfoot-tbody-thead)
+    - [tfoot, tbody, thead](#tfoot-tbody-thead)
+  - [Form Basics](#form-basics)
+    - [The Form Element](#the-form-element)
+    - [The Input Element](#the-input-element)
+    - [Labels](#labels)
+    - [Placeholder Attribute](#placeholder-attribute)
+    - [The name attribute](#the-name-attribute)
+    - [Using Form Controls Outside of Forms](#using-form-controls-outside-of-forms)
+    - [Type Attribute](#type-attribute)
+    - [Selection Elements](#selection-elements)
+      - [Select Dropdown](#select-dropdown)
+      - [Radio Buttons](#radio-buttons)
+      - [Checkboxes](#checkboxes)
+    - [Buttons](#buttons)
+  - [Form Validation](#form-validation)
+    - [Types of validations](#types-of-validations)
 - [CSS](#css)
   - [CSS Units](#css-units)
     - [Absolute units](#absolute-units)
@@ -64,6 +90,10 @@
     - [Using Customer Properties](#using-customer-properties)
     - [Fallback Values](#fallback-values)
     - [Scope](#scope)
+    - [The :root selector](#the-root-selector)
+    - [Media queries](#media-queries)
+  - [Frameworks and Preprocessors](#frameworks-and-preprocessors)
+    - [Disadvantages](#disadvantages)
 
 # JS
 
@@ -287,6 +317,233 @@ delete user.name;
 ```
 
 ### Arrays
+
+## this or that?
+
+The **this** keyword is one of the most confusing in JavaScript.
+
+Here is an example of it's utility:
+
+```javascript
+function identity() {
+  return this.name.toUpperCase();
+}
+
+function speak() {
+  var greeting = "Hello, I'm " + identity.call( this );
+  console.log( greeting );
+}
+var me = {
+  name: "Kyle";
+}
+
+var you = {
+  name: "Reader";
+};
+
+
+identity.call( me ); // KYLE
+identity.call( you ); // READER
+
+speak.call( me ); // Hello, I'm KYLE
+speak.call( you ); // Hello, 
+```
+
+The code snippet allows us the **identity()** and **speak()** functions to be re-used against multiple context (**me** and **you**) objects, rather than needing a separate version of the function for each object.
+
+We could've explicity passed in a context object to both **identity()** and **speak()**
+
+```javascript
+function identity(context){
+  return context.name.toUpperCase();
+}
+
+function speak(context) {
+  var greeting = "Hello, I'm" + identity( context )
+}
+
+identity( you ); // READER
+speak( me ); // Hello, I'm KYLE
+
+```
+
+However, the **this** mechanism makes it more elegant to pass along an object reference, rather than explicity passing one.
+
+
+### Misconceptions 
+
+**this** does not refer to the function itself. There are some reasons to call a function from inside itself (recursion or having an event handler that can unbind itself when it is called), but **this** doesn't let a function get a reference to iself.
+
+Considering this code, that keeps track of how many times a function(foo) was called
+
+```javascript
+function foo(num) {
+	console.log( "foo: " + num );
+
+	// keep track of how many times `foo` is called
+	this.count++;
+}
+
+foo.count = 0;
+
+var i;
+
+for (i=0; i<10; i++) {
+	if (i > 5) {
+		foo( i );
+	}
+}
+// foo: 6
+// foo: 7
+// foo: 8
+// foo: 9
+
+// how many times was `foo` called?
+console.log( foo.count ); // 0 -- WTF?
+```
+
+foo.count is still 0, even though the four console.log statements indicate it was called 4 times.
+
+However, this.count is not pointing at all to the function object, as the root objects are different.
+
+## this in more detail
+
+There are 4 rules when inspecting **this** call-site, which have an order of precedence
+
+### Default Binding 
+
+Consider the code: 
+
+```javascript
+function foo() {
+  console.log( this. a)
+}
+
+var = 2;
+
+foo(); // 2
+
+```
+
+Variables defined in the global scope like var a = 2 are synonoymous with global-object properties of the same name. They are not copies of each other, they are each other.
+
+When **foo()** is called, **this.a** resolves to our global variable *a*. This is because the default binding for this applies to the function call, and so points **this** at the global object. 
+
+### Implicit Binding
+
+## Objects and Object Constructors
+
+### Object as a Design Pattern
+
+One of the easiest ways to organize your code is grouping things into objects. For example:
+
+```javascript
+const playerOneName = 'tim'
+const playerTwoName = 'jenn'
+const playerOneMarker = 'x'
+const playerTwoMarker = 'o'
+
+// example two
+const playerOne = {
+  name: 'tim',
+  marker: 'x'
+}
+
+const playerTwo = {
+  name: 'jenn',
+  marker: '0'
+}
+```
+
+This looks clean, but using objects is easier. For example:
+
+```javascript
+function printName(player){
+  console.log(player.name)
+}
+```
+
+We can't access any of the players names with this, we would have to print out the player's names individually.
+
+That's not horrible, but what if we don't know the players name? Or if we are making something more complicated than a 2 player game? Using objects in this instance to keep track of our properties is the only way to go.
+
+In that situation, manually typing out the contents of our objects isn't feasible either. This is where object constructors come in.
+
+### Object Constructors
+
+When we have a specific object we need to duplicate, we can use an object constructor.
+
+```javascript
+function Player(name, marker) {
+  this.name = name
+  this.marker = marker
+}
+```
+
+and you can call this function with the keyword new
+
+```javascript
+const player = new Player('steve', 'X')
+console.log(player.name)
+```
+rferffefr
+You can add functions to the object as well.
+
+```javascript
+function Player(name, marker) {
+  this.name = name
+  this.marker = marker
+  this.sayName = function() {
+    console.log(name)
+  }
+} 
+
+const player1 = new Player('steve', 'X')
+const player2 = new Player('also steve', 'O')
+player1.sayName() // logs 'steve'
+player2.sayName() // logs 'also steve'
+```
+
+### The Prototype
+
+All objects in JS have a **prototype**. The prototype is another object that the original object inherits from-the original object has access to all of its prototype's methods and properties.
+
+If you're using constructors to make your objects it is best to define functions on the **prototype** of that object.  dfdf
+
+There are two interrelated concepts with prototype in JS:
+
+1. Every JS function has a prototype property, and you attach properties and methods on this prototype propetty when you want to implement inheritance. Prototypes are not accessible in a for/in loop. You add methods and properties on a function's prototype property to make those methods and properties available to instances of that function.
+
+2. Second concept with prototype is the prototype attribute. It is a characteristic of the object; this characteristic tells us the object's "parent". An object's prototype attribute points to the object's "parent"-the object it inherited its properties from. The prototype attribute is referred to as the prototype object, and it is set automatically when you create a new object. 
+
+### Constructor 
+
+A constructor is a function used for initializing new objects, using the new keyword.
+
+### Recommended Method for Prototypal Inheritance
+
+The recommended way of setting the prototype of an object is **Object.create**, which returns a new object with the specified prototype and any properties you want to add.
+
+```javascript 
+function Student() {
+}
+
+Student.prototype.sayName = function() {
+  console.log(this.name)
+}
+
+function EigthGrader(name) {
+  this.name = name;
+  this.grade = 8
+}
+
+EighthGrader.prototype = Object.create(Student.prototype)
+
+const carl = new EighthGrader('carl')
+carl.sayName() // console.logs 'carl'
+carl.grade // 8
+```
+
 # HTML
 
 ## SVG
@@ -338,9 +595,94 @@ You can create a table with **<table></table>** tag. A **<th></th>**  tag is for
 
 Useful for blind users, implemented using **caption** tag
 
-### <tfoot>, <tbody>, <thead>
+### tfoot, tbody, thead
 
 These tags give the table more structural definition.
+
+## Form Basics
+
+Forms are your user's gateway into your backend, where they provide data to you.
+
+### The Form Element
+
+The form element is a container element like the div. It accepts an **action** attribute which takes a url value that tells the form where it should send its data to be processed.
+
+Second is the **method** attribute which tells the browser which HTTP request method it should use to submit the form. GET and POST requests are two most common.
+
+We use GET when we want to retrieve something from a server. 
+POST is used when we want to change something on a server, for example, when a user makes an account or makes a payment on a website.
+
+### The Input Element
+
+Input element accepts a type attribute which tells the browser what type of data it should expect
+
+### Labels
+
+Labels are placed on inputs to inform users what type of data they are expected to enter.
+
+Labels accept a **for** attribute, which associates it with a particular input. The input we want to associate with a label needs an **id** attribute with the same value as the label's **for** attribute
+
+When a label is associated with an input and is clicked, it will focus the cursor on that input. 
+
+### Placeholder Attribute
+
+Placeholder attributes guide users on what to enter in an input. 
+
+### The name attribute
+
+The name attribute informs the backend what each piece of data represents. We attach a name attribute to our inputs. It serves as a reference to the data inputted into a form control after submitting it, it is like a variable name for an input. 
+
+### Using Form Controls Outside of Forms
+
+You can use any of the form controls HTML provides outside of the form element, even when you don't have a backend server.
+
+You can manipulate data from form controls.
+
+### Type Attribute
+
+You have many different type attributes:
+
+-email
+-password
+-number
+-date
+-text area (provides input box that spans multi line, accept rows and cols)
+
+### Selection Elements
+
+#### Select Dropdown
+
+Select element renders a dropdown list where users can select an option. Any options we want to display within the select element are defined using option elements. All the options must have a **value** attribute, and this value will be sent to the server when the form is submitted. 
+
+We can make one of our options be the default selection with the **selected** element.
+
+We can also split the list of options into groups using the optgroup element, each optgroup taking a label attribute.
+
+#### Radio Buttons
+
+Allow us to create multiple options the user can choose one of. Type is "radio". Radio buttons can only select one if there name attribute is thee same, can also preselect a button using checked attribute.
+
+#### Checkboxes
+
+Similar to radio buttons, but allow multiple selections.
+
+### Buttons 
+
+Button element creates clickable buttons that user can interact with. Also accepts a type attribute to tell browser which kind of button we are dealing with. There are:
+
+1. Submit Button (type="submit")
+2. Reset Button (type = "reset"). Clears all data user entered into form
+3. Generic Button  (type="button"). Used for submitting interactive UIs
+
+## Form Validation
+
+### Types of validations
+
+1. Required: makes a field required
+2. minlength: represents minimum amount of characters we want
+3. maxlength: self explanatory lol
+4. min validation: minimum number we want the form control to accept
+5. max validation: also self explanatory
 # CSS 
 
 ## CSS Units
@@ -549,6 +891,8 @@ We first declare out custom property with a double hyphen followed by a case sen
 
 var() function accepts two parameters: a custom property we want to assign and a fallback
 
+
+
 ### Scope 
 
 The scope of a custom property is determined by the selector. 
@@ -565,4 +909,40 @@ The scope of a custom property is determined by the selector.
   background-color: var(--main-bg);
 }
 
-Background color of red only applies to the .cool-paragraph class as it is the only element in the scope of the div that contains the variable 
+If you had a div with class "one" with a child with class "two", which had two grandchildren with class "three" and "four", and the following CSS:
+
+.two {
+  --test: 10px;
+}
+
+.three {
+  --test: 2em;
+}
+
+Using var(--test) would result in:
+1. Class "two" element: 10px;
+2. Class "three" element: 2em
+3. Class "four" element: 10px (inherited from parent class "two")
+4. Class "one" invalid value as it is outside scope
+
+Background color of red only applies to the .cool-paragraph class as it is the only element in the scope of the div that contains the variable.
+
+### The :root selector
+
+You may want to be able to use other custom properties on many, unreleated selectors. You can declare these properties on the :root selector as it has the highest specificity. 
+
+### Media queries
+
+Media queries are another option for setting a theme on a website. 
+
+1. Only dark and light themes are valid values for the media query
+2. It doesn't allow users to change the themes themselves
+
+## Frameworks and Preprocessors
+
+Frameworks like Bootstrap and Tailwind do a lot of the heavy lifting of CSS code for you. Bulma and Foundation are two other options.
+
+### Disadvantages
+
+Each framework is quite...similar. Thus, it's difficult to ignore the many similarities they have on websites as they are developed using the same frameworks. I
+
